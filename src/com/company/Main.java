@@ -16,11 +16,11 @@ public class Main {
         //Parameters
         String[] info = new String[8];
         double[] expected = {0, 1, 0, 0, 1, 1, 0, 0}; //ожидаемый ответ
-        double actual = 0; //полученный ответ
-        double sigmdx = 0;
-        double error = 0;
-        double weightsDelta = 0;
-        double learningRate = 0.1;
+        double actual; //полученный ответ
+        double sigmdx;
+        double error;
+        double weightsDelta;
+        double learningRate = 0.2;
         int epoch = 0;
 
         boolean positive = true;
@@ -41,16 +41,12 @@ public class Main {
         //Output layout
         double oneOutputNeuronAfterSig = 0;
 
-        //Заполнение весов
-        for (int i = 0; i < 2; i++) {
-            weightsFromStartNeuron1[i] = random(0.1, 0.9);
-            weightsFromStartNeuron2[i] = random(0.1, 0.9);
-            weightsFromStartNeuron3[i] = random(0.1, 0.9);
-            weightsFromHiddenNeurons[i] = random(0.1, 0.9);
-        }
-
         for (int i = 0; i < expected.length; i++) {
             for (int j = 0; j < 2; j++) {
+                weightsFromStartNeuron1[j] = random(0.1, 0.9);
+                weightsFromStartNeuron2[j] = random(0.1, 0.9);
+                weightsFromStartNeuron3[j] = random(0.1, 0.9);
+                weightsFromHiddenNeurons[j] = random(0.1, 0.9);
                 twoHiddenNeuron[j] = threeStartNeuron[i][0] * weightsFromStartNeuron1[j] + threeStartNeuron[i][1] * weightsFromStartNeuron2[j] +
                         +threeStartNeuron[i][2] * weightsFromStartNeuron3[j];
                 oneOutputNeuronAfterSig += sigmoid(twoHiddenNeuron[j]) * weightsFromHiddenNeurons[j];
@@ -59,7 +55,6 @@ public class Main {
             error = actual - expected[i];
             sigmdx = actual * (1 - actual);
             weightsDelta = error * sigmdx;
-
             for (int k = 0; k < 8; k++) {
                 if (expected[k] == 0) {
                     while (negative) {
@@ -74,8 +69,9 @@ public class Main {
                         }
 
                         actual = sigmoid(oneOutputNeuronAfterSig);
+
                         if (oneOutputNeuronAfterSig > 0.1 && oneOutputNeuronAfterSig < 0.2) {
-                            info[k] = "Epoch: " + epoch + " | " + "Result: " + oneOutputNeuronAfterSig + " | " + "Error: " + error;
+                            info[k] = k + 1 + ") " + "Epoch: " + epoch + " | " + "Result: " + oneOutputNeuronAfterSig + " | " + "Negative";
                             System.out.println(info[k]);
                             break;
                         } else {
@@ -100,8 +96,8 @@ public class Main {
 
                         actual = sigmoid(oneOutputNeuronAfterSig);
 
-                        if (oneOutputNeuronAfterSig > 0.9 && oneOutputNeuronAfterSig < 1.0) {
-                            info[k] = "Epoch: " + epoch + " | " + "Result: " + oneOutputNeuronAfterSig + " | " + "Error: " + error;
+                        if (oneOutputNeuronAfterSig > 0.9 && oneOutputNeuronAfterSig < 0.99) {
+                            info[k] = k + 1 + ") " + "Epoch: " + epoch + " | " + "Result: " + oneOutputNeuronAfterSig + " | " + "Positive";
                             System.out.println(info[k]);
                             break;
                         } else {
@@ -116,4 +112,5 @@ public class Main {
         }
     }
 }
+
 
